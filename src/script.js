@@ -97,4 +97,4 @@ window.addEventListener("popstate", event => {
 	loadPage(page, false);
 });
 
-loadPage(getPageFromURL(), false);
+loadPage(getPageFromURL(), false).catch(console.error);
