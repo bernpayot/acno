@@ -11,6 +11,7 @@
 }
 
 html {
+	letter-spacing: -0.05rem;
 	font-size: 22px;
 	font-family: Helvetica, sans-serif;
 	scroll-behavior: smooth;
@@ -115,6 +116,10 @@ p {
 		height: 50%;
 	}
 
+	p {
+		margin-top: 5rem;
+	}
+
 	.about {
 		display: flex;
 		flex-direction: column;
@@ -131,8 +136,7 @@ p {
 	}
 
 	.p2 {
-		max-width: clamp(250px, 20%, 40%);
-		margin-top: 8rem;
+		max-width: clamp(300px, 20%, 40%);
 	}
 
 	.homeosu {
@@ -146,6 +150,12 @@ p {
 		height: 100%;
 		object-fit: cover;
 		display: block;
+	}
+
+	.socials ul {
+		display: flex;
+		flex-direction: column;
+		row-gap: 8rem;
 	}
 
 	.cursor {
