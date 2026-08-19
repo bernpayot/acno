@@ -2,8 +2,8 @@ const content = document.querySelector("#content");
 const cursor = document.querySelector(".cursor");
 const anchor = document.querySelector("#usc");
 const randomOsuImages = [
-	'osu/2.avif',
-	'osu/3.avif',
+	'2.avif',
+	'3.avif',
 ];
 
 const pageCache = new Map(); // mini cache for page renders
@@ -29,12 +29,14 @@ document.addEventListener("mouseout", (e) => {
 });
 
 function setRandomOsuImage() {
-	const image = document.querySelector("#randomosu");
+    const image = document.querySelector(".homeosu img");
 
-	if (!image) return;
+    if (!image) return;
 
-	const randomIndex = Math.floor(Math.random() * randomOsuImages.length);
-	image.src = randomOsuImages[randomIndex];
+    const random =
+        randomOsuImages[Math.floor(Math.random() * randomOsuImages.length)];
+
+    image.src = `osu/${random}`;
 }
 
 function getPageFromURL() {
@@ -44,34 +46,45 @@ function getPageFromURL() {
 }
 
 async function loadPage(page, pushHistory = true) {
-	let html = pageCache.get(page);
+	try {
+		let html = pageCache.get(page);
 
-	if (!html) {
-		const response = await fetch(`/pages/${page}.html`);
+		if (!html) {
+			const response = await fetch(`/pages/${page}.html`);
 
-		if (!response.ok) {
-			throw new Error(`Page "${page}" not found`);
+			if (!response.ok) {
+				throw new Error(`Page "${page}" not found`);
+			}
+
+			html = await response.text();
+			pageCache.set(page, html);
 		}
 
-		html = await response.text();
-		pageCache.set(page, html);
+		content.innerHTML = html;
+
+		if (page === "home") {
+			setRandomOsuImage();
+		}
+
+		updateActiveLink(page);
+
+		if (pushHistory) {
+			history.pushState(
+				{ page },
+				"",
+				page === "home" ? "/" : `/${page}`
+			);
+		}
+	} catch (error) {
+		console.error(`Failed to load "${page}"`, error);
+
+		content.innerHTML = `
+			<p>
+				Something went wrong while loading this page.
+			</p>
+		`;
 	}
 
-	content.innerHTML = html;
-
-	if (page === "home") {
-		setRandomOsuImage();
-	}
-
-	updateActiveLink(page);
-
-	if (pushHistory) {
-		history.pushState(
-			{ page },
-			"",
-			page === "home" ? "/" : `/${page}`
-		);
-	}
 }
 
 function updateActiveLink(page) {
