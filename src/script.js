@@ -68,6 +68,12 @@ async function loadPage(page, pushHistory = true) {
 
 		updateActiveLink(page);
 
+		const pageElement = content.firstElementChild;
+
+		if (pageElement?.dataset.title) {
+			document.title = pageElement.dataset.title;
+		}
+
 		if (pushHistory) {
 			history.pushState(
 				{ page },
